@@ -26,7 +26,7 @@ ehthumbs.db
 Thumbs.db
 
 # Tailscale state files
-tailscale-nginx/state/
+tailscale-nginx/
 
 # Temporary files
 *.tmp
