@@ -141,11 +141,7 @@ print_status "Installing Node.js..."
 curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
 sudo apt install -y nodejs
 
-# Install npm explicitly (NodeSource may not include it by default)
-print_status "Installing npm..."
-sudo apt install -y npm
-
-# Verify Node.js and npm are available
+# Verify Node.js and npm are available (npm comes bundled with NodeSource's nodejs)
 if ! command -v node &> /dev/null || ! command -v npm &> /dev/null; then
     print_error "Node.js or npm installation failed!"
     exit 1
