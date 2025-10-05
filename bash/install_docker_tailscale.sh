@@ -141,7 +141,11 @@ print_status "Installing Node.js..."
 curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
 sudo apt install -y nodejs
 
-# Verify Node.js and npm are available (npm comes bundled with NodeSource's nodejs)
+# Enable Corepack to activate npm (included with Node.js 22.x)
+print_status "Enabling package managers..."
+corepack enable
+
+# Verify Node.js and npm are available
 if ! command -v node &> /dev/null || ! command -v npm &> /dev/null; then
     print_error "Node.js or npm installation failed!"
     exit 1
