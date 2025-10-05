@@ -153,8 +153,8 @@ nvm use 22
 # Ensure node and npm are in PATH
 export PATH="$NVM_DIR/versions/node/$(nvm version)/bin:$PATH"
 
-# Verify Node.js and npm are available
-if ! command -v node &> /dev/null || ! command -v npm &> /dev/null; then
+# Verify Node.js and npm are available (test execution directly)
+if ! node --version &> /dev/null || ! npm --version &> /dev/null; then
     print_error "Node.js or npm installation failed!"
     exit 1
 fi
