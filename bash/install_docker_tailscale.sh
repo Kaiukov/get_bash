@@ -143,11 +143,15 @@ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
 # Load NVM into current shell
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
 
 # Install Node.js 22 via NVM
 print_status "Installing Node.js 22 via NVM..."
 nvm install 22
 nvm use 22
+
+# Ensure node and npm are in PATH
+export PATH="$NVM_DIR/versions/node/$(nvm version)/bin:$PATH"
 
 # Verify Node.js and npm are available
 if ! command -v node &> /dev/null || ! command -v npm &> /dev/null; then
