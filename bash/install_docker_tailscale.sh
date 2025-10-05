@@ -87,7 +87,7 @@ validate_installation() {
 }
 
 # Check if running as root
-if [[ $EUID -eq 0 ]]; then
+if [ "$(id -u)" -eq 0 ]; then
     print_error "This script should not be run as root. Please run as a regular user with sudo privileges."
     exit 1
 fi
@@ -133,6 +133,10 @@ curl -fsSL https://tailscale.com/install.sh | sh
 print_status "Installing Node.js..."
 curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
 sudo apt install -y nodejs
+
+# Install npm explicitly (NodeSource may not include it by default)
+print_status "Installing npm..."
+sudo apt install -y npm
 
 # Verify Node.js and npm are available
 if ! command -v node &> /dev/null || ! command -v npm &> /dev/null; then
