@@ -136,14 +136,18 @@ sudo chmod +x /usr/local/bin/docker-compose
 print_status "Installing Tailscale..."
 curl -fsSL https://tailscale.com/install.sh | sh
 
-# Install Node.js (using NodeSource repository for latest LTS)
-print_status "Installing Node.js..."
-curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
-sudo apt install -y nodejs
+# Install Node.js via NVM (Node Version Manager)
+print_status "Installing NVM (Node Version Manager)..."
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
 
-# Enable Corepack to activate npm (included with Node.js 22.x)
-print_status "Enabling package managers..."
-corepack enable
+# Load NVM into current shell
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+
+# Install Node.js 22 via NVM
+print_status "Installing Node.js 22 via NVM..."
+nvm install 22
+nvm use 22
 
 # Verify Node.js and npm are available
 if ! command -v node &> /dev/null || ! command -v npm &> /dev/null; then
