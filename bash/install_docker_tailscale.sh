@@ -28,7 +28,7 @@ print_error() {
 # Validate installed packages
 validate_installation() {
     print_status "Validating installations..."
-    
+
     # Check Docker
     if command -v docker &> /dev/null; then
         print_status "✓ Docker is installed. Version: $(docker --version)"
@@ -36,7 +36,7 @@ validate_installation() {
         print_error "✗ Docker installation failed!"
         exit 1
     fi
-    
+
     # Check Docker Compose
     if command -v docker-compose &> /dev/null; then
         print_status "✓ Docker Compose is installed. Version: $(docker-compose --version)"
@@ -44,12 +44,44 @@ validate_installation() {
         print_error "✗ Docker Compose installation failed!"
         exit 1
     fi
-    
+
     # Check Tailscale
     if command -v tailscale &> /dev/null; then
         print_status "✓ Tailscale is installed. Version: $(tailscale version | head -n 1)"
     else
         print_error "✗ Tailscale installation failed!"
+        exit 1
+    fi
+
+    # Check Node.js
+    if command -v node &> /dev/null; then
+        print_status "✓ Node.js is installed. Version: $(node --version)"
+    else
+        print_error "✗ Node.js installation failed!"
+        exit 1
+    fi
+
+    # Check npm
+    if command -v npm &> /dev/null; then
+        print_status "✓ npm is installed. Version: $(npm --version)"
+    else
+        print_error "✗ npm installation failed!"
+        exit 1
+    fi
+
+    # Check Claude Code
+    if command -v claude &> /dev/null; then
+        print_status "✓ Claude Code is installed. Version: $(claude --version 2>&1 | head -n 1 || echo 'installed')"
+    else
+        print_error "✗ Claude Code installation failed!"
+        exit 1
+    fi
+
+    # Check Qwen Code
+    if command -v qwen &> /dev/null; then
+        print_status "✓ Qwen Code is installed. Version: $(qwen --version 2>&1 | head -n 1 || echo 'installed')"
+    else
+        print_error "✗ Qwen Code installation failed!"
         exit 1
     fi
 }
@@ -96,6 +128,25 @@ sudo chmod +x /usr/local/bin/docker-compose
 # Install Tailscale
 print_status "Installing Tailscale..."
 curl -fsSL https://tailscale.com/install.sh | sh
+
+# Install Node.js (using NodeSource repository for latest LTS)
+print_status "Installing Node.js..."
+curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
+sudo apt install -y nodejs
+
+# Verify Node.js and npm are available
+if ! command -v node &> /dev/null || ! command -v npm &> /dev/null; then
+    print_error "Node.js or npm installation failed!"
+    exit 1
+fi
+
+# Install Claude Code globally via npm
+print_status "Installing Claude Code..."
+npm install -g @anthropic-ai/claude-code
+
+# Install Qwen Code globally via npm
+print_status "Installing Qwen Code..."
+npm install -g @qwen-code/qwen-code
 
 # Validate installations
 validate_installation
