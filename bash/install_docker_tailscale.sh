@@ -88,8 +88,11 @@ validate_installation() {
 
 # Check if running as root
 if [ "$(id -u)" -eq 0 ]; then
-    print_error "This script should not be run as root. Please run as a regular user with sudo privileges."
-    exit 1
+    print_warning "Running as root. Docker group configuration will be skipped."
+    print_warning "You will be able to run docker commands without sudo (already root)."
+    RUNNING_AS_ROOT=true
+else
+    RUNNING_AS_ROOT=false
 fi
 
 print_status "Starting installation of Docker, Docker Compose, and Tailscale..."
@@ -116,8 +119,12 @@ sudo apt update
 sudo apt install -y docker-ce docker-ce-cli containerd.io
 
 # Add current user to docker group
-print_status "Adding current user to docker group..."
-sudo usermod -aG docker $USER
+if [ "$RUNNING_AS_ROOT" = false ]; then
+    print_status "Adding current user to docker group..."
+    sudo usermod -aG docker $USER
+else
+    print_status "Skipping docker group configuration (running as root)..."
+fi
 
 # Install Docker Compose
 print_status "Installing Docker Compose..."
