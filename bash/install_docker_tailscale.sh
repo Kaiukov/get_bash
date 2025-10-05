@@ -150,14 +150,15 @@ print_status "Installing Node.js 22 via NVM..."
 nvm install 22
 nvm use 22
 
-# Ensure node and npm are in PATH
-export PATH="$NVM_DIR/versions/node/$(nvm version)/bin:$PATH"
-
 # Verify Node.js and npm are available (test execution directly)
-if ! node --version &> /dev/null || ! npm --version &> /dev/null; then
+print_status "Validating Node.js and npm installation..."
+if ! node --version >/dev/null 2>&1 || ! npm --version >/dev/null 2>&1; then
     print_error "Node.js or npm installation failed!"
+    print_error "Please ensure NVM loaded correctly and try again."
     exit 1
 fi
+
+print_status "✓ Node.js $(node --version) and npm $(npm --version) are available"
 
 # Install Claude Code globally via npm
 print_status "Installing Claude Code..."
